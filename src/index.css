@@ -1,13 +1,209 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font: 12px "Century Gothic", Futura, sans-serif;
+  margin: 10px;
+  color: #ccc;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+#root {
+  width: 800px;
+  height: 600px;
+}
+
+.main-window {
+  display: grid;
+  background: #aaa;
+  border: 1px solid #999;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 40px 1fr;
+  grid-column-gap: 5px;
+  grid-row-gap: 0;
+  align-content: start;
+}
+
+.info-wrapper {
+  background: #000;
+  color: #ddd;
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.counters {
+  background: #404;
+  height: 525px;
+  overflow-y: scroll;
+  padding: 30px 5px 0 5px;
+  position: relative;
+}
+
+.score-panel {
+  background: #000;
+  height: 525px;
+  overflow-y: auto;
+  padding: 30px 5px 0 5px;
+}
+
+.control-panel {
+  background: #044;
+  height: 525px;
+  overflow-y: auto;
+  padding: 30px 5px 0 5px;
+}
+
+.counter-wrapper {
+  margin: 0 0 5px 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 70% 30%;
+  grid-auto-rows: 25px;
+}
+
+.counter-name {
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  color: #ddd;
+  height: 25px;
+  border-radius: 5px 0 0 5px;
+  padding: 0px;
+  border: 0px;
+  margin: 0px;
+  outline: 0;
+  width: 100%;
+  grid-column: 1/1;
+  grid-row: 1/1;
+}
+
+.cannotAfford {
+  background: #020;
+  color: #555;
+}
+.canAfford {
+  background: #050;
+}
+.notAvailable .counter-name {
+  background: #200 !important;
+  color: #555;
+}
+.notAvailable .counter-val {
+  background: #555 !important;
+}
+.notAvailable .counter-stats-price {
+  color: #555;
+}
+.notAvailable .counter-stats-rate {
+  color: #555;
+}
+
+.canAfford:hover {
+  background-color: #090;
+}
+.counter-name:active {
+  background-color: #050 !important;
+  transform: translateY(2px);
+}
+
+.counter-val {
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  background: #ddd;
+  color: #000;
+  height: 25px;
+  border-radius: 0 5px 5px 0;
+  padding: 0px;
+  border: 0px;
+  margin: 0px;
+  width: 100%;
+}
+
+.counter-stats-wrapper .body {
+  font-size: 80%;
+}
+.counter-stats-wrapper {
+  grid-column: 1 / -1;
+  margin: 0 0 2px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-column-gap: 5px;
+  grid-row-gap: 0;
+  height: 20px;
+  line-height: 20px;
+  width: 100%;
+}
+
+.counter-stats-price {
+  background: #000;
+  color: #ddd;
+  float: left;
+  border-radius: 0 0 5px 5px;
+}
+
+.counter-stats-rate {
+  background: #000;
+  color: #ddd;
+  float: left;
+  border-radius: 0 0 5px 5px;
+}
+.counter-stats-percent {
+  background: #000;
+  color: #ddd;
+  float: right;
+  border-radius: 0 0 5px 5px;
+}
+
+.newCounterAnimOverlay {
+  grid-column: 1/1;
+  grid-row: 1/1;
+  animation: burn 1000ms ease-out forwards;
+  pointer-events: none;
+  /* border: 5px solid #f00; */
+  z-index: 1;
+}
+
+.newCounterAnimOverlay::before {
+  content: "";
+  position: absolute;
+  left: 40px;
+  width: 100px;
+  height: 40px;
+  border-radius: 100%;
+  animation: flare 1000ms ease-out forwards;
+}
+
+.newCounterAnimOverlay::after {
+  content: "";
+  position: absolute;
+  right: 40px;
+  width: 100px;
+  height: 40px;
+  border-radius: 100%;
+  animation: flare 1000ms ease-out forwards;
+}
+
+@keyframes flare {
+  100% {
+    transform: translateY(-20px) scale(1.5);
+    filter: blur(10px);
+    opacity: 0;
+  }
+}
+
+@keyframes burn {
+  0% {
+    color: rgba(255, 130, 110, 1);
+    /* background: rgba(255, 230, 110, 1); */
+    box-shadow: 0 0 5px 0 rgba(200, 0, 10, 1), 0 0 5px 0 rgba(230, 30, 10, 0.8),
+      0 0 5px 0 rgba(230, 230, 10, 0.6);
+  }
+
+  100% {
+    color: rgba(0, 0, 0, 1);
+    /* background: rgba(255, 255, 255, 1); */
+    box-shadow: 0 -35px 40px 30px rgba(255, 130, 10, 0),
+      0 -30px 30px 10px rgba(230, 30, 10, 0),
+      0 -20px 10px 0 rgba(255, 255, 10, 0);
+  }
 }
