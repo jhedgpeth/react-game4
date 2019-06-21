@@ -2,6 +2,7 @@ body {
   font: 12px "Century Gothic", Futura, sans-serif;
   margin: 10px;
   color: #ccc;
+  background: #333;
 }
 
 #root {
@@ -66,7 +67,7 @@ body {
   display: inline-block;
   color: #ddd;
   height: 25px;
-  border-radius: 5px 0 0 5px;
+  border-radius: 5px 0 0 0 ;
   padding: 0px;
   border: 0px;
   margin: 0px;
@@ -80,9 +81,10 @@ body {
   background: #020;
   color: #555;
 }
-.canAfford {
+.counter-name.canAfford {
   background: #050;
 }
+
 .notAvailable .counter-name {
   background: #200 !important;
   color: #555;
@@ -97,7 +99,7 @@ body {
   color: #555;
 }
 
-.canAfford:hover {
+.counter-name.canAfford:hover {
   background-color: #090;
 }
 .counter-name:active {
@@ -126,7 +128,7 @@ body {
   grid-column: 1 / -1;
   margin: 0 0 2px 0;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 3fr 3fr 2fr;
   grid-column-gap: 5px;
   grid-row-gap: 0;
   height: 20px;
@@ -135,10 +137,16 @@ body {
 }
 
 .counter-stats-price {
-  background: #000;
+  /* background: #000; */
   color: #ddd;
   float: left;
   border-radius: 0 0 5px 5px;
+}
+.counter-stats-price.canAfford {
+  background: #020;
+}
+.counter-stats-price.cannotAfford {
+  background: #000;
 }
 
 .counter-stats-rate {
