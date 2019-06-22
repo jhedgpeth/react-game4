@@ -7,8 +7,11 @@ class CounterButton extends React.Component {
     render() {
         const counterFunc = require('./CounterUtils');
         const c = this.props.counter;
+
+
+
         const buttonClass = "counter-name "
-            + (this.props.score.gte(counterFunc.getCost(c, this.props.purchaseAmt)) ? "canAfford" : "cannotAfford");
+            + (this.props.score.gte(counterFunc.getCost(c, this.props.purchaseAmt, this.props.score)) ? "canAfford" : "cannotAfford");
         const rows = [];
         rows.push(<button
             className={buttonClass}
