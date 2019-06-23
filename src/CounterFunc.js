@@ -45,13 +45,6 @@ export class CounterFunc {
         const maxbuys = this.maxBuy(counter, score);
         // console.log(maxbuys);
         let numBuy = 0;
-        // if (typeof(numBuy) !== "number") {
-        //     console.log("numBuy not a number:" + typeof(numBuy));
-        // }
-
-        // if (purchaseAmt === "PrimeTime") {
-        //     console.log(maxbuys["PrimeTime"]);
-        // }
 
         switch (purchaseAmt) {
 

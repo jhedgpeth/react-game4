@@ -170,7 +170,7 @@ class Game extends React.Component {
                 counter.isVisible = true;
                 changed = true;
             }
-            if (counter.disabled === false && this.state.score.lt(costObj.cost)) {
+            if (counter.disabled === false && (costObj.num === 0 || this.state.score.lt(costObj.cost))) {
                 counter.disabled = true;
                 changed = true;
             }
