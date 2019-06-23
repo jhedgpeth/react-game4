@@ -54,7 +54,7 @@ export class CounterFunc {
         // }
 
         switch (purchaseAmt) {
-            
+
             case "Max OCD":
                 // console.log(maxbuys);
                 for (const key of ["max100", "max25"]) {
@@ -95,24 +95,18 @@ export class CounterFunc {
         ).plus(1).log(counter.costGrowth).floor();
         const max100 = max.div(100).floor().times(100).minus(counter.owned % 100).toFixed(0);
         const max25 = max.div(25).floor().times(25).minus(counter.owned % 25).toFixed(0);
-        // const max10 = max.div(10).floor().times(10).minus(counter.owned % 10).toFixed(0);
-
-        // const primes = (this.primeFactorsTo(counter.owned,max).slice(-1)[0] || 0);
-        const primes = this.primeFactorsTo(counter.owned + max);
+        const primes = this.primeFactorsTo();
         let primeTime = 0;
 
-        for (const prime in primes) {
-            if ((primes[prime] - counter.owned) < max && primes[prime] > primeTime) {
-                primeTime = primes[prime] - counter.owned;
-                // console.log(primes);
-                // console.log("counter: " + counter.name + "  owned: " + counter.owned + "  prime: " + primes[prime] + "  primeTime: " + primeTime + "  max: " + max);
+        // console.time('primeidx');
+        for (const primeidx in primes) {
+            if ((primes[primeidx] - counter.owned) < max) {
+                primeTime = primes[primeidx] - counter.owned;
+                break;
             }
         }
-        // if (primes.length > 0 && (primes.slice(-1)[0] - counter.owned) < max) {
-        //     primeTime = (primes.slice(-1)[0] - counter.owned);
-        //     console.log(primes);
-        //     console.log("primeTime: "+primeTime);
-        // }
+        // console.timeEnd('primeidx');
+
         return ({
             1: 1,
             10: 10,
@@ -126,19 +120,29 @@ export class CounterFunc {
         });
     }
 
-    static primeFactorsTo(max) {
-        var store = [], i, j, primes = [];
+    static primeFactorsTo() {
+        if (this.primes) {
+            return this.primes;
+        }
+        var max = 25000;
+        var primesFwd = [];
+        console.log("creating primes");
+        console.time('prime creation');
+        var store = [], i, j;
         for (i = 2; i <= max; ++i) {
             if (!store[i]) {
-                primes.push(i);
+                primesFwd.push(i);
                 for (j = i << 1; j <= max; j += i) {
                     store[j] = true;
                 }
             }
         }
-        // console.log(primes);
-        return primes;
+        this.primes = primesFwd.reverse();
+        console.timeEnd('prime creation');
+        console.log("primes length: " + this.primes.length);
+        return this.primes;
     }
-
 }
+
+
 

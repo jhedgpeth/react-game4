@@ -202,7 +202,7 @@ class Game extends React.Component {
         const counterCost = CounterFunc.getCost(counter, this.state.purchaseAmt, this.state.score);
         console.log("handlePurchase cost:" + counterCost.cost.toFixed(0));
         if (this.state.score.gte(counterCost.cost)) {
-            console.log("typeof(counterCost.num): " + typeof (counterCost.num) + "  owned: " + typeof (counter.owned));
+            // console.log("typeof(counterCost.num): " + typeof (counterCost.num) + "  owned: " + typeof (counter.owned));
             console.log("purchasing " + counterCost.num + " x " + counter.name + " at $" + counterCost.cost.toFixed(2));
             let updatedCounter = { ...counter };
 
@@ -216,7 +216,7 @@ class Game extends React.Component {
                 counters: counterList,
                 score: newScore,
             })
-            console.log(updatedCounter);
+            // console.log(updatedCounter);
         } else {
             console.log("not enough money to purchase " + counter.name + " at $" + counterCost.cost.toFixed(2) + " < " + this.state.score.toFixed(2));
         }
