@@ -38,7 +38,8 @@ export function getRevenuePct(revenue, counterSum) {
 
 
 export function getCost(counter, purchaseAmt, score) {
-    // const counterFunc = require('./CounterUtils');
+    // const counterFunc = require('./CounterFunc.js');
+    // const cF = new counterFunc();
     // const maxbuys = counterFunc.maxBuy(counter, score);
     // switch (purchaseAmt) {
     //     case "Max":

@@ -162,6 +162,12 @@ body {
   border-radius: 0 0 5px 5px;
 }
 
+.purchase-amount.amt-selected {
+  color: #ccc;
+  background: #404;
+
+}
+
 .newCounterAnimOverlay {
   grid-column: 1/1;
   grid-row: 1/1;

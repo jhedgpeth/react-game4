@@ -2,16 +2,17 @@ import React from 'react';
 // import ReactDOM from 'react-dom';
 // import Decimal from 'decimal.js';
 // import { CfgCounters } from './CfgCounters.js';
+import { CounterFunc } from './CounterFunc';
 
 class CounterButton extends React.Component {
     render() {
-        const counterFunc = require('./CounterUtils');
         const c = this.props.counter;
+        const costObj = CounterFunc.getCost(c, this.props.purchaseAmt, this.props.score);
 
-
-
+        // console.log("tryBuy: " +tryBuy);
+        // console.log(CounterFunc.getCost(c, tryBuy, this.props.score));
         const buttonClass = "counter-name "
-            + (this.props.score.gte(counterFunc.getCost(c, this.props.purchaseAmt, this.props.score)) ? "canAfford" : "cannotAfford");
+            + (costObj.num > 0 && this.props.score.gte(costObj.cost) ? "canAfford" : "cannotAfford");
         const rows = [];
         rows.push(<button
             className={buttonClass}
@@ -19,7 +20,7 @@ class CounterButton extends React.Component {
             disabled={c.disabled}
             onClick={() => this.props.handlePurchase(c)}
         >
-            {c.name} x {this.props.purchaseAmt}
+            {c.name} x {costObj.num}
         </button>
         );
         rows.push(<div className="newCounterAnimOverlay" key={c.name + "anim"} />);
@@ -33,17 +34,17 @@ class CounterButton extends React.Component {
 }
 
 function CounterStats(props) {
-    const counterFunc = require('./CounterUtils');
     const c = props.counter;
-    const counterRevenue = counterFunc.getRevenue(props.counter, props.prestige);
-    const counterSum = counterFunc.sumCounters(props.counters, counterFunc.getRevenue, props.prestige);
+    const counterRevenue = CounterFunc.getRevenue(props.counter, props.prestige);
+    const counterSum = CounterFunc.sumCounters(props.counters, CounterFunc.getRevenue, props.prestige);
+    const costObj = CounterFunc.getCost(c, props.purchaseAmt, props.score);
 
-    const rps = counterFunc.showNumber(counterRevenue, props.numberFormat);
-    const rp = counterFunc.showNumber(counterFunc.getRevenuePct(counterRevenue, counterSum), props.numberFormat);
-    const cost = counterFunc.showNumber(counterFunc.getCost(c, props.purchaseAmt), props.numberFormat);
+    const rps = CounterFunc.showNumber(counterRevenue, props.numberFormat);
+    const rp = CounterFunc.showNumber(CounterFunc.getRevenuePct(counterRevenue, counterSum), props.numberFormat);
+    const cost = CounterFunc.showNumber(costObj.cost, props.numberFormat);
 
     const priceClass = "counter-stats-price "
-            + (props.score.gte(counterFunc.getCost(c, props.purchaseAmt)) ? "canAfford" : "cannotAfford");
+            + (props.score.gte(CounterFunc.getCost(c, props.purchaseAmt, props.score).cost) ? "canAfford" : "cannotAfford");
 
     const rows = [];
     rows.push(<div className={priceClass} key={c.name + "stats-price"}>${cost}</div>);

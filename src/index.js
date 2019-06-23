@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import { cfgCounters } from './CfgCounters.js';
 import Counters from './Counters.js';
+import { CounterFunc } from './CounterFunc';
 // import Decimal from 'decimal.js';
 // import * as numberformat from 'swarm-numberformat';
 
@@ -19,7 +20,6 @@ class Game extends React.Component {
         this.numberformat = new numberformat.Formatter({ backend: 'decimal.js', sigfigs: 4, format: 'engineering', Decimal: Decimal });
         // this.numberformat = new numberformat.Formatter({ backend: 'decimal.js', format: 'engineering', Decimal: Decimal });
 
-        this.counterFunc = require('./CounterUtils');
         this.timeIntervalDefault = 100;
 
         this.state = {
@@ -28,7 +28,7 @@ class Game extends React.Component {
             prestige: { num: new Decimal(1000), val: 5 },
             prestigeNext: new Decimal(0),
             lifetimeEarnings: new Decimal(0),
-            purchaseOpts: ["1", "10", "25", "100", "Max", "Max OCD"],
+            purchaseOpts: ["1", "10", "25", "100", "Max", "Max OCD", "PrimeTime"],
             purchaseAmt: "1",
             incomePerSec: new Decimal(0),
             incomePerTick: new Decimal(0),
@@ -163,16 +163,18 @@ class Game extends React.Component {
     updateGame() {
         let changed = false;
         let counterList = this.state.counters.map((counter) => {
-            const counterCost = this.counterFunc.getCost(counter, this.state.purchaseAmt);
+
+            const costObj = CounterFunc.getCost(counter, this.state.purchaseAmt, this.state.score);
+
             if (counter.isVisible === false && this.state.score.gte(counter.initialVisible)) {
                 counter.isVisible = true;
                 changed = true;
             }
-            if (counter.disabled === false && this.state.score.lt(counterCost)) {
+            if (counter.disabled === false && this.state.score.lt(costObj.cost)) {
                 counter.disabled = true;
                 changed = true;
             }
-            if (counter.disabled === true && this.state.score.gte(counterCost)) {
+            if (counter.disabled === true && costObj.num > 0 && this.state.score.gte(costObj.cost)) {
                 counter.disabled = false;
                 changed = true;
             }
@@ -184,8 +186,8 @@ class Game extends React.Component {
             })
         }
 
-        const incomePerSec = this.counterFunc.sumCounters(this.state.counters, this.counterFunc.getRevenue, this.state.prestige);
-        const incomePerTick = this.counterFunc.getRevenuePerTick(incomePerSec, this.timeInterval);
+        const incomePerSec = CounterFunc.sumCounters(this.state.counters, CounterFunc.getRevenue, this.state.prestige);
+        const incomePerTick = CounterFunc.getRevenuePerTick(incomePerSec, this.timeInterval);
         const newLifetimeEarnings = this.state.lifetimeEarnings.plus(incomePerTick);
         this.setState({
             incomePerSec: incomePerSec,
@@ -197,12 +199,16 @@ class Game extends React.Component {
     }
 
     handlePurchase(counter) {
-        const counterCost = this.counterFunc.getCost(counter, this.state.purchaseAmt);
-        if (this.state.score.gte(counterCost)) {
-            console.log("purchasing " + this.state.purchaseAmt + " x " + counter.name + " at $" + counterCost.toFixed(2));
+        const counterCost = CounterFunc.getCost(counter, this.state.purchaseAmt, this.state.score);
+        console.log("handlePurchase cost:" + counterCost.cost.toFixed(0));
+        if (this.state.score.gte(counterCost.cost)) {
+            console.log("typeof(counterCost.num): " + typeof (counterCost.num) + "  owned: " + typeof (counter.owned));
+            console.log("purchasing " + counterCost.num + " x " + counter.name + " at $" + counterCost.cost.toFixed(2));
             let updatedCounter = { ...counter };
-            updatedCounter.owned = counter.owned + this.state.purchaseAmt;
-            const newScore = this.state.score.minus(counterCost);
+
+            updatedCounter.owned = (counter.owned + counterCost.num);
+
+            const newScore = this.state.score.minus(counterCost.cost);
             let counterList = this.state.counters.map((c) => {
                 return (c.name === counter.name) ? updatedCounter : c;
             })
@@ -210,8 +216,9 @@ class Game extends React.Component {
                 counters: counterList,
                 score: newScore,
             })
+            console.log(updatedCounter);
         } else {
-            console.log("not enough money to purchase " + counter.name + " at $" + counterCost.toFixed(2) + " < " + counterCost.toFixed(2));
+            console.log("not enough money to purchase " + counter.name + " at $" + counterCost.cost.toFixed(2) + " < " + this.state.score.toFixed(2));
         }
     }
 
@@ -234,17 +241,17 @@ class Game extends React.Component {
                     />
                 </div>
                 <div className="score-panel">
-                    <h1>${this.counterFunc.showNumber(this.state.score, this.numberformat)}</h1>
-                    <h3>{this.counterFunc.showNumber(this.state.incomePerSec, this.numberformat)} /s</h3>
-                    <h3>{this.counterFunc.showNumber(this.state.incomePerTick, this.numberformat)} /tick</h3>
+                    <h1>${CounterFunc.showNumber(this.state.score, this.numberformat)}</h1>
+                    <h3>{CounterFunc.showNumber(this.state.incomePerSec, this.numberformat)} /s</h3>
+                    <h3>{CounterFunc.showNumber(this.state.incomePerTick, this.numberformat)} /tick</h3>
                     <h3>tick = {this.state.timeInterval} ms</h3>
-                    <h3>{this.counterFunc.showNumber(this.state.lifetimeEarnings, this.numberformat)} lifetime earnings</h3>
+                    <h3>{CounterFunc.showNumber(this.state.lifetimeEarnings, this.numberformat)} lifetime earnings</h3>
                     <h3>
-                        {this.counterFunc.showNumber(this.state.prestige.num, this.numberformat)}
+                        {CounterFunc.showNumber(this.state.prestige.num, this.numberformat)}
                         &nbsp;prestige gives&nbsp;
-                        {this.counterFunc.showNumber(prestigeMultiplier, this.numberformat)}%
+                        {CounterFunc.showNumber(prestigeMultiplier, this.numberformat)}%
                     </h3>
-                    <h3>{this.counterFunc.showNumber(this.state.prestigeNext, this.numberformat)} next prestige</h3>
+                    <h3>{CounterFunc.showNumber(this.state.prestigeNext, this.numberformat)} next prestige</h3>
                 </div>
                 <div className="control-panel">
                     <button className="pause-button" onClick={this.pause}>{this.state.pauseText}</button>
@@ -252,18 +259,26 @@ class Game extends React.Component {
                     <button className="freqUp" onClick={this.freqUp}>Slower</button>
                     <button className="freqDown" onClick={this.freqDown}>Faster</button>
                     <div className="timerRunning">timerRunning: {this.isTimerRunning().toString()}</div>
+                    <br />
                     <div className="purchaseAmts">
                         {this.state.purchaseOpts.map((amt) => {
+                            let amtClass = "purchase-amount"
+                            if (amt === this.state.purchaseAmt) {
+                                amtClass = "purchase-amount amt-selected";
+                            }
                             return (
-                                <button key={amt} className="purchase-amount" onClick={() => { this.updatePurchaseAmt(amt) }}>{amt}</button>
+                                <button key={amt} className={amtClass} onClick={() => { this.updatePurchaseAmt(amt) }}>{amt}</button>
                             )
                         })}
                     </div>
-                    <button className={prestigeClass} disabled={this.state.prestigeNext.gt(0) ? false : true} onClick={this.prestige}>Prestige</button>
+                    <div>
+                        <br />
+                        <button className={prestigeClass} disabled={this.state.prestigeNext.gt(0) ? false : true} onClick={this.prestige}>Prestige</button>
+                    </div>
                     {/* <div>
-                        { Object.entries( this.counterFunc.maxBuy(this.state.counters[0], this.state.score) ).map( (key) => {
+                        { Object.entries( CounterFunc.maxBuy(this.state.counters[0], this.state.score) ).map( (key) => {
                             return (
-                                <div key={key[0]}>{key[0]}:{this.counterFunc.showNumber(key[1], this.numberformat)}</div>
+                                <div key={key[0]}>{key[0]}:{CounterFunc.showNumber(key[1], this.numberformat)}</div>
                             )
                         })}
                     </div> */}
