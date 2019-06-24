@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/react-game4/static/css/main.8af880ec.chunk.css",
+    "main.css": "/react-game4/static/css/main.e94188da.chunk.css",
     "main.js": "/react-game4/static/js/main.b38bd1d1.chunk.js",
     "main.js.map": "/react-game4/static/js/main.b38bd1d1.chunk.js.map",
     "runtime~main.js": "/react-game4/static/js/runtime~main.d1f90428.js",
@@ -8,8 +8,8 @@
     "static/js/2.96eaf142.chunk.js": "/react-game4/static/js/2.96eaf142.chunk.js",
     "static/js/2.96eaf142.chunk.js.map": "/react-game4/static/js/2.96eaf142.chunk.js.map",
     "index.html": "/react-game4/index.html",
-    "precache-manifest.4573eea4e5afc87a5c68e4e6fc8f1825.js": "/react-game4/precache-manifest.4573eea4e5afc87a5c68e4e6fc8f1825.js",
+    "precache-manifest.8e33242b44e2ba0e37a0660c7c857de5.js": "/react-game4/precache-manifest.8e33242b44e2ba0e37a0660c7c857de5.js",
     "service-worker.js": "/react-game4/service-worker.js",
-    "static/css/main.8af880ec.chunk.css.map": "/react-game4/static/css/main.8af880ec.chunk.css.map"
+    "static/css/main.e94188da.chunk.css.map": "/react-game4/static/css/main.e94188da.chunk.css.map"
   }
 }
